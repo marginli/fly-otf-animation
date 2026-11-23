@@ -63,6 +63,27 @@ canvas { display: block; width: 100%; max-width: 100%; }
 .box { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
 #err { color: var(--mch); }
 @media (prefers-reduced-motion: reduce) { .badge { transition: none; } }
+.ctrl { display: grid; gap: 10px; }
+.ctrl p { margin: 0; max-width: 78ch; }
+.db { display: grid; gap: 6px; margin-top: 4px; }
+.db-row { display: grid; grid-template-columns: minmax(84px, 9.5em) 1fr minmax(96px, 8.5em); align-items: center; gap: 10px; }
+.db-name { font-weight: 500; font-size: .9rem; }
+.db-val { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: .82rem; color: var(--muted); }
+.db-track { position: relative; height: 26px; }
+.db-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
+.db-ref { position: absolute; top: 2px; bottom: 2px; border-left: 1px dashed var(--muted); }
+.db-seg { position: absolute; top: calc(50% - 1px); height: 2px; background: var(--ink); opacity: .55; }
+.db-dot { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; }
+.db-pre { border: 2px solid var(--muted); background: var(--panel); }
+.db-post { background: var(--ink); border: 2px solid var(--panel); }
+.db-axis { display: grid; grid-template-columns: minmax(84px, 9.5em) 1fr minmax(96px, 8.5em); gap: 10px; font-size: .72rem; color: var(--muted); }
+.db-axis div { position: relative; height: 14px; }
+.db-axis span { position: absolute; transform: translateX(-50%); }
+.ctrl ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; max-width: 78ch; }
+.ctrl table { border-collapse: collapse; font-size: .82rem; }
+.ctrl th, .ctrl td { border-bottom: 1px solid var(--line); padding: 4px 10px 4px 0; text-align: left; }
+.ctrl td.n { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .db-row, .db-axis { grid-template-columns: 6.5em 1fr; } .db-val { grid-column: 2; } .db-axis > :last-child { display: none; } }
 </style>
 <style>*{box-sizing:border-box}</style>
 </head>
@@ -113,6 +134,47 @@ canvas { display: block; width: 100%; max-width: 100%; }
       <p class="cap">目前這一段的長條隨播放即時更新（到目前為止的比例）。</p>
     </div>
   </div>
+  <section class="card ctrl" aria-labelledby="ctrl-h">
+    <h3 id="ctrl-h">對照組：避開真的是學出來的嗎？</h3>
+    <p>上面的動畫只有兩隻果蠅。為了確認野生型避開 MCH 角落是學習造成的，同樣的場地與時間表又跑了另外三組，加上野生型共四組，每組 20 隻。同一組的 20 隻用同一個腦模型，差在出發位置、走路的隨機轉向，以及神經輸入的隨機雜訊。下圖是各組待在計分區（角落 5×5 mm）的時間比例，取 20 隻的平均。</p>
+    <div class="db" role="img" aria-label="四組訓練前後待在計分區的時間比例：野生型 12.5% 到 2.4%，關掉學習 13.0% 到 14.2%，打亂接線 11.5% 到 12.3%，隨機電擊 12.6% 到 1.8%">
+      <div class="db-row" title="野生型：訓練前 12.5% → 訓練後 2.4%">
+        <div class="db-name">野生型<div class="cap">學習打開</div></div>
+        <div class="db-track"><span class="db-ref" style="left:69.44%"></span><span class="db-seg" style="left:15.00%;width:63.12%"></span><span class="db-dot db-pre" style="left:78.12%"></span><span class="db-dot db-post" style="left:15.00%"></span></div>
+        <div class="db-val">12.5% → 2.4%</div>
+      </div>
+      <div class="db-row" title="關掉學習：訓練前 13.0% → 訓練後 14.2%">
+        <div class="db-name">關掉學習<div class="cap">學習速度設成 0</div></div>
+        <div class="db-track"><span class="db-ref" style="left:69.44%"></span><span class="db-seg" style="left:81.25%;width:7.50%"></span><span class="db-dot db-pre" style="left:81.25%"></span><span class="db-dot db-post" style="left:88.75%"></span></div>
+        <div class="db-val">13.0% → 14.2%</div>
+      </div>
+      <div class="db-row" title="打亂接線：訓練前 11.5% → 訓練後 12.3%">
+        <div class="db-name">打亂接線<div class="cap">接線隨機重排</div></div>
+        <div class="db-track"><span class="db-ref" style="left:69.44%"></span><span class="db-seg" style="left:71.88%;width:5.00%"></span><span class="db-dot db-pre" style="left:71.88%"></span><span class="db-dot db-post" style="left:76.88%"></span></div>
+        <div class="db-val">11.5% → 12.3%</div>
+      </div>
+      <div class="db-row" title="隨機電擊：訓練前 12.6% → 訓練後 1.8%">
+        <div class="db-name">隨機電擊<div class="cap">電擊時間和位置無關</div></div>
+        <div class="db-track"><span class="db-ref" style="left:69.44%"></span><span class="db-seg" style="left:11.25%;width:67.50%"></span><span class="db-dot db-pre" style="left:78.75%"></span><span class="db-dot db-post" style="left:11.25%"></span></div>
+        <div class="db-val">12.6% → 1.8%</div>
+      </div>
+      <div class="db-axis"><div></div><div><span style="left:0.00%">0%</span><span style="left:25.00%">4%</span><span style="left:50.00%">8%</span><span style="left:75.00%">12%</span><span style="left:100.00%">16%</span></div><div></div></div>
+    </div>
+    <div class="legend"><span><i class="db-dot db-pre" style="position:static;display:inline-block;margin:0 4px -2px 0"></i>訓練前</span><span><i class="db-dot db-post" style="position:static;display:inline-block;margin:0 4px -2px 0"></i>訓練後</span><span>虛線＝面積比例 11%（完全隨機走動時的期望值）</span></div>
+    <ul>
+      <li><b>關掉學習</b>：學習速度設成 0，也就是上面「KC→MBON11/12 連接強度」永遠不變，其他都一樣。<b>打亂接線</b>：把連結體（用電子顯微鏡重建的整個果蠅腦的神經接線圖）的接線全部隨機重排，每顆神經元的連接數不變。這個模擬裡，走路和掉頭由程式規則決定，腦只提供上面的 S 讀數，所以接線打亂後果蠅照樣會走。兩組訓練後都沒有變少，所以避開需要學習，也需要真實的接線圖。</li>
+      <li><b>隨機電擊</b>：第 k 隻被電的次數和野生型第 k 隻一樣，但時間在訓練段內隨機排，和果蠅在哪裡無關。結果也學會了。原因是這個場地只有 MCH 角落有氣味：
+        <ul>
+          <li>在角落外被電時沒聞到氣味，腦中記氣味的神經元（KC）沒有活動，沒有任何連接被改變，所以也不會因此避開別的地方。</li>
+          <li>模型裡 KC 放電後會留下約 2 秒的痕跡；電擊只要落在果蠅待在 MCH 區裡、或剛離開 2 秒內，就等於「氣味＋電擊」配在一起。</li>
+          <li>隨機電擊開始後，果蠅走出 MCH 區也不會停；野生型的電擊則是一走出去就停。所以隨機組真正配到氣味的電擊時間（每隻約 6.5 秒）反而比野生型（約 4.0 秒）多，學得也稍微多一點（1.8% 對 2.4%）。</li>
+        </ul>
+        所以在這個場地，隨機電擊沒辦法當成「沒有配對」的對照，能用的對照是關掉學習與打亂接線兩組。</li>
+    </ul>
+    <details><summary class="cap">數字表</summary>
+      <table><thead><tr><th>組別</th><th>訓練前</th><th>訓練後</th><th>每隻「訓練前 − 訓練後」（平均 ± 標準差，百分點）</th><th>20 隻裡</th></tr></thead><tbody><tr><td>野生型</td><td class="n">12.5%</td><td class="n">2.4%</td><td class="n">10.1 ± 2.7</td><td>20 隻全部減少</td></tr><tr><td>關掉學習</td><td class="n">13.0%</td><td class="n">14.2%</td><td class="n">−1.2 ± 5.0</td><td>8 隻減少、12 隻增加</td></tr><tr><td>打亂接線</td><td class="n">11.5%</td><td class="n">12.3%</td><td class="n">−0.8 ± 3.1</td><td>8 隻減少、12 隻增加</td></tr><tr><td>隨機電擊</td><td class="n">12.6%</td><td class="n">1.8%</td><td class="n">10.8 ± 2.8</td><td>20 隻全部減少</td></tr></tbody></table>
+    </details>
+  </section>
   <p class="cap" id="err"></p>
 </div>
 
